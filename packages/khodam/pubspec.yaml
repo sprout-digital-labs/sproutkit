@@ -1,0 +1,17 @@
+name: khodam
+description: Khodam is an HTTP Inspector tool which helps debugging http requests. It catches and stores http requests and responses, which can be viewed via simple UI.
+version: 0.0.5
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0
+  dio: ^5.1.1
+  chopper: ^7.0.6
+  overlay_support: ^2.1.0
+#  share_plus: ^7.1.0
+  rxdart: ^0.27.1

@@ -1,0 +1,54 @@
+
+name: CI
+
+on:
+  push:
+    branches: [ "main", "devops/**" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/labamu_ui_kit/example
+    env:
+      flutter_version: "3.22.2"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{env.flutter_version}}
+
+      - name: 📦 Get packages
+        run: flutter pub get
+
+      - name: 📦 Flutter Pub Run
+        run: flutter pub run build_runner build -d
+
+      - name: 🏭 Build Web Application
+        run: flutter build web
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "packages/labamu_ui_kit/example/build/web"
+  deploy:
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
